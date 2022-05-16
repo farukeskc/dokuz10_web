@@ -23,9 +23,10 @@ class AuthServices {
     }
   }
 
-  Future<void> registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(String email, String password) async {
     try {
-      await auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await auth.createUserWithEmailAndPassword(email: email, password: password);
+      return result.user?.uid;
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
