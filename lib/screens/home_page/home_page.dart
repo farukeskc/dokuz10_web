@@ -1,5 +1,6 @@
 import 'package:dokuz10_web/models/user.dart';
 import 'package:dokuz10_web/services/auth.dart';
+import 'package:dokuz10_web/widgets/add_new_event.dart';
 import 'package:dokuz10_web/widgets/home_page_app_bar_user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   final List<String> itemsText = ["Çıkış Yap"];
@@ -30,10 +30,10 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Home'),
         actions: [
           GestureDetector(
-              onTap: () {
-                _key.currentState?.openEndDrawer();
-              },
-              child: const HomePageAppBarUserInfo(name: "Faruk"),
+            onTap: () {
+              _key.currentState?.openEndDrawer();
+            },
+            child: const HomePageAppBarUserInfo(name: "Faruk"),
           ),
         ],
       ),
@@ -42,6 +42,13 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(auth.uid),
+            IconButton(
+              onPressed: () {
+                showMyDialog(context);
+              },
+              color: Theme.of(context).colorScheme.primary,
+              icon: const Icon(Icons.add),
+            )
           ],
         ),
       ),
@@ -53,7 +60,9 @@ class _HomePageState extends State<HomePage> {
               title: Row(
                 children: [
                   itemsIcons[index],
-                  const SizedBox(width: 5,),
+                  const SizedBox(
+                    width: 5,
+                  ),
                   Text(itemsText[index]),
                 ],
               ),
