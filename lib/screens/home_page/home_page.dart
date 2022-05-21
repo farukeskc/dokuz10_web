@@ -1,9 +1,9 @@
-import 'package:dokuz10_web/models/user.dart';
 import 'package:dokuz10_web/services/auth.dart';
 import 'package:dokuz10_web/widgets/add_new_event.dart';
+import 'package:dokuz10_web/widgets/calendar_widget.dart';
+import 'package:dokuz10_web/widgets/change_theme_button_widget.dart';
 import 'package:dokuz10_web/widgets/home_page_app_bar_user_info.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,12 +23,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<UserModel>(context);
     return Scaffold(
       key: _key,
       appBar: AppBar(
         title: const Text('Home'),
         actions: [
+          IconButton(
+            onPressed: () async {
+              await addNewEventDialog(context, DateTime.now(), const TimeOfDay(hour: 21, minute: 0));
+            },
+            color: Colors.white,
+            icon: const Icon(Icons.add),
+          ),
           GestureDetector(
             onTap: () {
               _key.currentState?.openEndDrawer();
@@ -37,38 +43,41 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(auth.uid),
-            IconButton(
-              onPressed: () {
-                showMyDialog(context);
-              },
-              color: Theme.of(context).colorScheme.primary,
-              icon: const Icon(Icons.add),
-            )
-          ],
-        ),
+      body: const Center(
+        child: CalendarWidget()
       ),
       endDrawer: Drawer(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return ListTile(
-              onTap: () => itemsFunctions[index](),
-              title: Row(
-                children: [
-                  itemsIcons[index],
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(itemsText[index]),
-                ],
+        child: Column(
+          children: [
+            Row(
+              children: const [
+                ChangeThemeButtonWidget(),
+                SizedBox(
+                  width: 5,
+                ),
+                Text("Karanlık Mod"),
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onTap: () => itemsFunctions[index](),
+                    title: Row(
+                      children: [
+                        itemsIcons[index],
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(itemsText[index]),
+                      ],
+                    ),
+                  );
+                },
+                itemCount: itemsText.length,
               ),
-            );
-          },
-          itemCount: itemsText.length,
+            ),
+          ],
         ),
       ),
     );

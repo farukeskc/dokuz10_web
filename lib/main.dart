@@ -4,6 +4,7 @@ import 'package:dokuz10_web/screens/wrapper.dart';
 import 'package:dokuz10_web/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -53,10 +54,17 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 title: 'dokuz10',
                 themeMode: themeProvider.themeMode,
-                theme:
-                    MyThemes.lightTheme,
-                darkTheme:
-                    MyThemes.darkTheme,
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale("tr"),
+                ],
+                locale: const Locale("tr"),
+                theme: MyThemes.lightTheme,
+                darkTheme: MyThemes.darkTheme,
                 home: const Wrapper(),
               );
             },

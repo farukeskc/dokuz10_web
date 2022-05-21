@@ -29,7 +29,7 @@ class HomePageAppBarUserInfo extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 5,),
+          const SizedBox(width: 10,),
         ],
       ),
     );

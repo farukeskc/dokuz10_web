@@ -1,15 +1,28 @@
 import 'package:dokuz10_web/models/constants.dart';
+import 'package:dokuz10_web/models/user.dart';
+import 'package:dokuz10_web/services/database.dart';
+import 'package:dokuz10_web/shared/date_to_string.dart';
+import 'package:dokuz10_web/widgets/time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-Future<void> showMyDialog(BuildContext context) async {
+Future<void> addNewEventDialog(
+  BuildContext context,
+  DateTime? date,
+  TimeOfDay time,
+) async {
   final DateFormat formatter = DateFormat('dd-MM-yyyy');
   TextEditingController _datePickerController = TextEditingController();
-  DateTime? date;
+  TextEditingController _timePickerController = TextEditingController();
+  _datePickerController.text = dateToString(date!);
+  _timePickerController .text = time.format(context);
+  int? price;
   return showDialog<void>(
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
+      final auth = Provider.of<UserModel>(context);
       return AlertDialog(
         title: const Text('Yeni Maç Ekle'),
         content: Column(
@@ -23,9 +36,10 @@ Future<void> showMyDialog(BuildContext context) async {
                   firstDate: DateTime.now(),
                   lastDate: DateTime.now().add(const Duration(days: 21)),
                 );
-                _datePickerController.text = formatter.format(date!).toString().substring(0,10);
+                _datePickerController.text =
+                    dateToString(date!);
               },
-              child: TextField(
+              child: TextFormField(
                 controller: _datePickerController,
                 enabled: false,
                 decoration: authInputDecoration.copyWith(
@@ -34,12 +48,43 @@ Future<void> showMyDialog(BuildContext context) async {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: () async {
+                time = await timePicker(context);
+                _timePickerController.text = time.format(context);
+              },
+              child: TextFormField(
+                controller: _timePickerController,
+                enabled: false,
+                decoration: authInputDecoration.copyWith(
+                  label: const Text("Saat"),
+                  suffixIcon: const Icon(Icons.access_time),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              decoration: authInputDecoration.copyWith(
+                  label: const Text('Saatlik Ücret')),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                price = int.parse(value);
+              },
+            ),
           ],
         ),
         actions: <Widget>[
           TextButton(
             child: const Text('Kaydet'),
-            onPressed: () {
+            onPressed: () async {
+              date = DateTime(
+                  date!.year, date!.month, date!.day, time.hour, time.minute);
+              await DBS(uid: auth.uid).addNewEvent(date, price);
               Navigator.of(context).pop();
             },
           ),

@@ -17,4 +17,11 @@ class DBS {
       "role": "fieldOwner",
     });
   }
+
+  Future addNewEvent(DateTime? date, int? price) async {
+    users.doc(uid).collection("events").add({
+      "date": date,
+      "price": price,
+    });
+  }
 }
