@@ -1,5 +1,4 @@
 import 'package:dokuz10_web/services/auth.dart';
-import 'package:dokuz10_web/widgets/add_new_event.dart';
 import 'package:dokuz10_web/widgets/calendar_widget.dart';
 import 'package:dokuz10_web/widgets/change_theme_button_widget.dart';
 import 'package:dokuz10_web/widgets/home_page_app_bar_user_info.dart';
@@ -28,13 +27,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Home'),
         actions: [
-          IconButton(
-            onPressed: () async {
-              await addNewEventDialog(context, DateTime.now(), const TimeOfDay(hour: 21, minute: 0));
-            },
-            color: Colors.white,
-            icon: const Icon(Icons.add),
-          ),
           GestureDetector(
             onTap: () {
               _key.currentState?.openEndDrawer();

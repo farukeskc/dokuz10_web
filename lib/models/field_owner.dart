@@ -4,6 +4,7 @@ class FieldOwner {
   final String uid;
   String name;
   Address address;
+
   FieldOwner({
     required this.uid,
     required this.name,

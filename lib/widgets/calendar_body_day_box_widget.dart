@@ -14,7 +14,7 @@ class CalendarBodyDayBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final calendarProvider = Provider.of<CalendarProvider>(context);
+    final _calendarProvider = Provider.of<CalendarProvider>(context);
     DateTime today = DateTime.now();
     today = DateTime(today.year, today.month, today.day);
     return GestureDetector(
@@ -25,8 +25,8 @@ class CalendarBodyDayBoxWidget extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(date.day.toString()),
         decoration: BoxDecoration(
-          color: (calendarProvider.currentYear == date.year &&
-                  calendarProvider.currentMonth == date.month)
+          color: (_calendarProvider.currentYear == date.year &&
+                  _calendarProvider.currentMonth == date.month)
               ? (date == today)
                   ? Colors.teal
                   : Colors.teal.withOpacity(0.5)

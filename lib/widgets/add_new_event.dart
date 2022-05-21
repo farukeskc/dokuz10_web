@@ -1,10 +1,12 @@
 import 'package:dokuz10_web/models/constants.dart';
 import 'package:dokuz10_web/models/user.dart';
+import 'package:dokuz10_web/provider/field_provider.dart';
+import 'package:dokuz10_web/provider/my_events_provider.dart';
 import 'package:dokuz10_web/services/database.dart';
 import 'package:dokuz10_web/shared/date_to_string.dart';
 import 'package:dokuz10_web/widgets/time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 Future<void> addNewEventDialog(
@@ -12,7 +14,6 @@ Future<void> addNewEventDialog(
   DateTime? date,
   TimeOfDay time,
 ) async {
-  final DateFormat formatter = DateFormat('dd-MM-yyyy');
   TextEditingController _datePickerController = TextEditingController();
   TextEditingController _timePickerController = TextEditingController();
   _datePickerController.text = dateToString(date!);
@@ -22,6 +23,8 @@ Future<void> addNewEventDialog(
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
+      final _myEvents = Provider.of<MyEventsProvider>(context);
+      final _fieldProvider = Provider.of<FieldProvider>(context);
       final auth = Provider.of<UserModel>(context);
       return AlertDialog(
         title: const Text('Yeni Maç Ekle'),
@@ -30,14 +33,14 @@ Future<void> addNewEventDialog(
           children: [
             GestureDetector(
               onTap: () async {
-                date = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 21)),
-                );
-                _datePickerController.text =
-                    dateToString(date!);
+                // date = await showDatePicker(
+                //   context: context,
+                //   initialDate: DateTime.now(),
+                //   firstDate: DateTime.now(),
+                //   lastDate: DateTime.now().add(const Duration(days: 21)),
+                // );
+                // _datePickerController.text =
+                //     dateToString(date!);
               },
               child: TextFormField(
                 controller: _datePickerController,
@@ -53,8 +56,8 @@ Future<void> addNewEventDialog(
             ),
             GestureDetector(
               onTap: () async {
-                time = await timePicker(context);
-                _timePickerController.text = time.format(context);
+                // time = await timePicker(context);
+                // _timePickerController.text = time.format(context);
               },
               child: TextFormField(
                 controller: _timePickerController,
@@ -84,7 +87,7 @@ Future<void> addNewEventDialog(
             onPressed: () async {
               date = DateTime(
                   date!.year, date!.month, date!.day, time.hour, time.minute);
-              await DBS(uid: auth.uid).addNewEvent(date, price);
+              await DBS(uid: auth.uid).addNewEvent(_myEvents, date!, _fieldProvider.myFields[_fieldProvider.currentField], price!);
               Navigator.of(context).pop();
             },
           ),

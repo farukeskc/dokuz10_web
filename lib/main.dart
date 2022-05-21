@@ -1,4 +1,6 @@
 import 'package:dokuz10_web/models/user.dart';
+import 'package:dokuz10_web/provider/field_provider.dart';
+import 'package:dokuz10_web/provider/my_events_provider.dart';
 import 'package:dokuz10_web/provider/theme_provider.dart';
 import 'package:dokuz10_web/screens/wrapper.dart';
 import 'package:dokuz10_web/services/auth.dart';
@@ -26,6 +28,7 @@ class MyApp extends StatelessWidget {
         measurementId: "G-7H3Y0CCQBE"),
   );
 
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -46,6 +49,12 @@ class MyApp extends StatelessWidget {
                 value: AuthServices().authStateChanges,
                 initialData: null,
                 catchError: (e, _) => null,
+              ),
+              Provider(
+                  create: (context) => MyEventsProvider(),
+              ),
+              Provider(
+                create: (context) => FieldProvider(),
               ),
             ],
             builder: (context, _) {
