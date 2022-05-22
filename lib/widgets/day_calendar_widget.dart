@@ -5,6 +5,7 @@ import 'package:dokuz10_web/widgets/add_new_event.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class DayCalendar extends StatefulWidget {
   DateTime date;
 
@@ -22,6 +23,8 @@ class _DayCalendarState extends State<DayCalendar> {
   Widget build(BuildContext context) {
     final _myEvents = Provider.of<MyEventsProvider>(context);
     final _fieldProvider = Provider.of<FieldProvider>(context);
+    DateTime firstHourOfDay =
+        DateTime(widget.date.year, widget.date.month, widget.date.day, 12, 0);
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
@@ -40,12 +43,10 @@ class _DayCalendarState extends State<DayCalendar> {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           Event? eventThisHour;
-          index = (index + 12) % 24;
-          TimeOfDay time = TimeOfDay(hour: index, minute: 0);
+          // TimeOfDay time = TimeOfDay(hour: index, minute: 0);
+          DateTime boxDate = firstHourOfDay.add(Duration(hours: index));
           for (Event element in _myEvents.myEvents) {
-            if (element.date ==
-                    DateTime(widget.date.year, widget.date.month, widget.date.day, time.hour,
-                        time.minute) &&
+            if (element.date == boxDate &&
                 element.field ==
                     (_fieldProvider.myFields[_fieldProvider.currentField]).id) {
               eventThisHour = element;
@@ -54,21 +55,54 @@ class _DayCalendarState extends State<DayCalendar> {
           }
           return GestureDetector(
             onTap: () async {
-              if (eventThisHour == null) {
-                await addNewEventDialog(context, widget.date, time);
-                setState(() {
-
-                });
+              if (eventThisHour == null && boxDate.isAfter(DateTime.now())) {
+                await addNewEventDialog(context, boxDate);
+                setState(() {});
               }
             },
             child: Container(
-              color: eventThisHour != null ? Colors.red : Colors.green,
+              color: eventThisHour != null
+                  ? Colors.red
+                  : Theme.of(context).colorScheme.primary,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: Text(time.format(context)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          TimeOfDay(hour: boxDate.hour, minute: boxDate.minute)
+                              .format(context),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                        ),
+                        Text(
+                          ((eventThisHour?.price != null)
+                              ? "Ücret: " +
+                                  eventThisHour!.price.toString() +
+                                  ' ₺'
+                              : ''),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                        ),
+                        Text(
+                          (eventThisHour?.details != null)
+                              ? eventThisHour!.details
+                              : (eventThisHour == null &&
+                                      boxDate.isAfter(DateTime.now()))
+                                  ? 'dokuz10 mobilde kullanıcıları tarafından seçilebilir.'
+                                  : '',
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary,
+                              fontSize: 10),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -24,17 +24,23 @@ class DBS {
     });
   }
 
-  Future addNewEvent(MyEventsProvider _myEvents, DateTime date, Field field, int price) async {
-    _myEvents.addEvent(Event(date: date, price: price, field: field.id));
-    await users.doc(uid).collection("fields").doc(field.id).collection("events").add({
+  Future addNewEvent(MyEventsProvider _myEvents, DateTime date, Field field,
+      int price, String details) async {
+    _myEvents.addEvent(Event(date: date, price: price, details: details, field: field.id));
+    await users
+        .doc(uid)
+        .collection("fields")
+        .doc(field.id)
+        .collection("events")
+        .add({
       "date": date,
       "field": field.id,
       "price": price,
+      "details": details,
     });
   }
 
   Future<void> getEvents(BuildContext context) async {
-    print('getEvents');
     final _myEvents = Provider.of<MyEventsProvider>(context);
     final _fieldProvider = Provider.of<FieldProvider>(context);
     _myEvents.myEvents.clear();
@@ -42,7 +48,11 @@ class DBS {
     await users.doc(uid).collection("fields").get().then((value) async {
       for (var field in value.docs) {
         Map fieldMap = field.data();
-        Field _field = Field(id: field.id, width: fieldMap['width'], height: fieldMap['height'], roofed: fieldMap['roofed']);
+        Field _field = Field(
+            id: field.id,
+            width: fieldMap['width'],
+            height: fieldMap['height'],
+            roofed: fieldMap['roofed']);
         _fieldProvider.addField(_field);
         await users
             .doc(uid)
@@ -53,8 +63,11 @@ class DBS {
             .then((value) {
           for (var event in value.docs) {
             Map data = event.data();
-            _myEvents.addEvent(
-                Event(date: data['date'].toDate(), price: data['price'], field: data['field']));
+            _myEvents.addEvent(Event(
+                date: data['date'].toDate(),
+                price: data['price'],
+                details: data['details'],
+                field: data['field']));
           }
         });
       }

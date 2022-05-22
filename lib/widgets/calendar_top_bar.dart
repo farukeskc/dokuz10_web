@@ -1,4 +1,3 @@
-import 'package:dokuz10_web/models/constants.dart';
 import 'package:flutter/material.dart';
 
 class CalendarTopBar extends StatelessWidget {
@@ -24,6 +23,7 @@ class CalendarTopBar extends StatelessWidget {
 // ignore: must_be_immutable
 class CalendarTopBarDayContainer extends StatelessWidget {
   String text;
+
   CalendarTopBarDayContainer({
     required this.text,
     Key? key,
@@ -41,7 +41,7 @@ class CalendarTopBarDayContainer extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           border: Border.all(
-            color: myColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),

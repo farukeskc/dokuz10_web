@@ -4,24 +4,18 @@ Color myColor = const Color(0xff62973A);
 
 InputDecoration authInputDecoration = InputDecoration(
   enabledBorder: const OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(10)),
-    borderSide: BorderSide(
-      color: Color(0xffbcbcbc),
-      width: 1
-    )
-  ),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(color: Color(0xffbcbcbc), width: 1)),
   disabledBorder: const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide(
-          color: Color(0xffbcbcbc),
-          width: 1
-      )
-  ),
+      borderSide: BorderSide(color: Color(0xffbcbcbc), width: 1)),
   focusedBorder: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide(
-          color: myColor,
-          width: 2
-      )
-  ),
+      borderSide: BorderSide(color: myColor, width: 2)),
+  errorBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(color: Colors.red, width: 2)),
+  focusedErrorBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(color: Colors.red, width: 2)),
 );
